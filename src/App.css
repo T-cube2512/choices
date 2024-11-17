@@ -1,6 +1,6 @@
-/* App.css */
 
-/* Set the global background to white, and text to black */
+
+
 body {
   background-color: white;
   color: black;
@@ -9,13 +9,13 @@ body {
   padding: 0;
 }
 
-/* Center the content on the screen */
+
 .App {
   text-align: center;
   margin-top: 50px;
 }
 
-/* Style for all input fields and buttons */
+
 input, button {
   background-color: white;
   border: 2px solid black;
@@ -27,23 +27,33 @@ input, button {
   outline: none;
 }
 
-/* Add a slight hover effect to buttons */
+
 button:hover, input:hover {
   background-color: #f0f0f0;
 }
 
-/* Focus effect for input fields and buttons */
+
 input:focus, button:focus {
   border-color: #333;
   background-color: #fff;
 }
 
-/* Style the question number and other headings */
-h1, h2, h3 {
+
+h1, h2{
   color: black;
 }
 
-/* Style the question stats */
+h3 {
+  font-size: 36px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+}
+
+h4 {
+  font-size: 20px;
+  color: #000000;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -53,7 +63,7 @@ li {
   margin-bottom: 10px;
 }
 
-/* For the buttons for the answers, you can make them inline-block */
+
 button {
   display: inline-block;
   margin: 10px;
@@ -62,12 +72,12 @@ button {
   cursor: pointer;
 }
 
-/* Additional styles for input fields (optional) */
+
 input[type="number"] {
   width: 80px;
 }
 
-/* You can add margins to elements to space them out */
+
 label {
   display: block;
   margin-top: 10px;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";  // Make sure this CSS file is imported
+import "./App.css";  // Ensure your CSS file is imported
 
 function App() {
   const [startRange, setStartRange] = useState("");
@@ -11,6 +11,9 @@ function App() {
   const [isRunning, setIsRunning] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
+  const [isReviewing, setIsReviewing] = useState(false);
+  const [reviewStats, setReviewStats] = useState([]);
+  const [score, setScore] = useState(0);
 
   const startQuestion = () => {
     const questionRange = Array.from(
@@ -21,6 +24,7 @@ function App() {
     setTimer(timePerQuestion);
     setIsRunning(true);
     setIsFinished(false);
+    setIsReviewing(false);
     setQuestionStats([]);
   };
 
@@ -55,11 +59,31 @@ function App() {
     }
   }, [currentQuestion, endRange]);
 
+  const handleReviewAnswer = (isCorrect) => {
+    setReviewStats((prev) => [
+      ...prev,
+      { question: currentQuestion, isCorrect, selectedAnswer: questionStats[currentQuestion - startRange].selectedAnswer },
+    ]);
+    setCurrentQuestion((prev) => prev + 1);
+  };
+
+  const startReview = () => {
+    setIsReviewing(true);
+    setCurrentQuestion(startRange);
+  };
+
+  const calculateScore = () => {
+    const correctAnswers = reviewStats.filter(stat => stat.isCorrect).length;
+    const totalQuestions = reviewStats.length;
+    const percentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
+    setScore(percentage);
+  };
+
   return (
     <div className="App">
       <h1>Question Timer App</h1>
 
-      {!isRunning && !isFinished && (
+      {!isRunning && !isFinished && !isReviewing && (
         <div>
           <label>
             Start Question:
@@ -105,18 +129,30 @@ function App() {
         </div>
       )}
 
-      {isFinished && (
+      {isFinished && !isReviewing && (
         <div>
-          <h2>Test Finished!</h2>
+          <h2>Test Finished! Ready to Review</h2>
+          <button onClick={startReview}>Start Review</button>
+        </div>
+      )}
+
+      {isReviewing && currentQuestion <= endRange && (
+        <div>
+          <h2>Review Question: {currentQuestion}</h2>
+          <p>Selected Answer: {questionStats[currentQuestion - startRange].selectedAnswer}</p>
           <div>
-            <h3>Stats:</h3>
-            <ul>
-              {questionStats.map((stat, index) => (
-                <li key={index}>
-                  Question {stat.question}: Answer {stat.selectedAnswer}, Time Taken: {stat.timeTaken}s
-                </li>
-              ))}
-            </ul>
+            <button onClick={() => handleReviewAnswer(true)}>Right</button>
+            <button onClick={() => handleReviewAnswer(false)}>Wrong</button>
+          </div>
+        </div>
+      )}
+
+      {isReviewing && currentQuestion === endRange + 1 && (
+        <div>
+          <h2>Review Complete!</h2>
+          <div>
+            <h3>Score: {score}%</h3>
+            <h4>Correct Answers: {reviewStats.filter(stat => stat.isCorrect).length} / {reviewStats.length}</h4>
           </div>
         </div>
       )}
