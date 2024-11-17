@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";  // Ensure your CSS file is imported
+import "./App.css";  
 
 function App() {
   const [startRange, setStartRange] = useState("");
   const [endRange, setEndRange] = useState("");
   const [timePerQuestion, setTimePerQuestion] = useState("");
+  const [numChoices, setNumChoices] = useState(4);  
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionStats, setQuestionStats] = useState([]);
   const [timer, setTimer] = useState(0);
@@ -14,6 +15,7 @@ function App() {
   const [isReviewing, setIsReviewing] = useState(false);
   const [reviewStats, setReviewStats] = useState([]);
   const [score, setScore] = useState(0);
+  const [isStarted, setIsStarted] = useState(false);  
 
   const startQuestion = () => {
     const questionRange = Array.from(
@@ -46,7 +48,7 @@ function App() {
     if (isRunning && timer > 0) {
       countdown = setInterval(() => setTimer((prev) => prev - 1), 1000);
     } else if (timer === 0 && currentQuestion !== endRange + 1) {
-      handleAnswer(null); // if time runs out
+      handleAnswer(null); 
     }
 
     return () => clearInterval(countdown);
@@ -73,19 +75,42 @@ function App() {
   };
 
   const calculateScore = () => {
-    // Calculate the number of correct answers
     const correctAnswers = reviewStats.filter(stat => stat.isCorrect).length;
     const totalQuestions = reviewStats.length;
     const percentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
-    setScore(percentage); // Update the score state
+    setScore(percentage);
   };
 
   useEffect(() => {
-    // If we've finished reviewing all questions, calculate the score
     if (isReviewing && currentQuestion > endRange) {
       calculateScore();
     }
   }, [currentQuestion, isReviewing, reviewStats]);
+
+  const generateChoices = () => {
+    
+    const choices = [];
+    const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");  
+    for (let i = 0; i < numChoices; i++) {
+      choices.push(labels[i]);
+    }
+    return choices;
+  };
+
+  
+  if (!isStarted) {
+    return (
+      <div className="App start-screen">
+        <h1>Welcome to Choices</h1>
+        <p>
+          Choices is an app designed to help users who are currently using a test-based book or PDF. 
+          Instead of navigating back and forth between the questions and answer key, 
+          you can use this app to simulate the question answering experience in a more efficient and focused way.
+        </p>
+        <button onClick={() => setIsStarted(true)}>Start</button>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
@@ -120,7 +145,16 @@ function App() {
               placeholder="Time in seconds"
             />
           </label>
-          <button onClick={startQuestion}>Start</button>
+          <label>
+            Number of Choices:
+            <input
+              type="number"
+              value={numChoices}
+              onChange={(e) => setNumChoices(Math.min(Math.max(Number(e.target.value), 2), 20))}
+              placeholder="Choices per Question"
+            />
+          </label>
+          <button onClick={startQuestion}>Start Quiz</button>
         </div>
       )}
 
@@ -129,10 +163,11 @@ function App() {
           <h2>Question: {currentQuestion}</h2>
           <div>Time Left: {timer}s</div>
           <div>
-            <button onClick={() => handleAnswer("A")}>A</button>
-            <button onClick={() => handleAnswer("B")}>B</button>
-            <button onClick={() => handleAnswer("C")}>C</button>
-            <button onClick={() => handleAnswer("D")}>D</button>
+            {generateChoices().map((choice, index) => (
+              <button key={index} onClick={() => handleAnswer(choice)}>
+                {choice}
+              </button>
+            ))}
           </div>
         </div>
       )}
