@@ -73,15 +73,23 @@ function App() {
   };
 
   const calculateScore = () => {
+    // Calculate the number of correct answers
     const correctAnswers = reviewStats.filter(stat => stat.isCorrect).length;
     const totalQuestions = reviewStats.length;
     const percentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
-    setScore(percentage);
+    setScore(percentage); // Update the score state
   };
+
+  useEffect(() => {
+    // If we've finished reviewing all questions, calculate the score
+    if (isReviewing && currentQuestion > endRange) {
+      calculateScore();
+    }
+  }, [currentQuestion, isReviewing, reviewStats]);
 
   return (
     <div className="App">
-      <h1>Question Timer App</h1>
+      <h1>Choices App</h1>
 
       {!isRunning && !isFinished && !isReviewing && (
         <div>
