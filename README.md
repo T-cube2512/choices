@@ -16,8 +16,8 @@
 1. Clone the repository:
 
 ```bash
-   git clone https://github.com/yourusername/choices-app.git
-   cd choices-app
+   git clone https://github.com/T-cube2512/choices.git
+   cd choices
 ```
 2. Install the dependencies:
 
