@@ -1,6 +1,6 @@
 # Choices App
 
-Link to use the App: [https://t-cube2512.github.io/choices/][https://t-cube2512.github.io/choices/]
+Link to use the App: [https://t-cube2512.github.io/choices/](https://t-cube2512.github.io/choices/)
 
 **Choices** is an app designed to help users who are currently using a test-based book or PDF. Instead of navigating back and forth between the questions and answer key, you can use this app to simulate the question answering experience in a more efficient way. Don't suffer like I did.
 
